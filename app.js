@@ -1,13 +1,14 @@
 const express = require('express');
 const app = express();
+const ejsmate = require('ejs-mate');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const path = require('path');
 const Campground = require('./models/campground');
 
-//////////////////////
-// mongoose connection
-//////////////////////
+/* ==========================================================================
+   Mongoose
+   ========================================================================== */
 mongoose.connect('mongodb://localhost:27017/yelp-camp');
   
 const db = mongoose.connection;
@@ -17,44 +18,56 @@ db.once("open", () => {
   console.log("Database connected")
 });
 
-/////////////////////
-// express routing //
-/////////////////////
+/* ==========================================================================
+   Express
+   ========================================================================== */
 
-// --- set --- // 
+/* Engine
+   ========================================================================== */
+
+app.engine('ejs', ejsmate);
+
+/* Set
+   ========================================================================== */
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'));
 
-// --- use --- //
+/* Use
+   ========================================================================== */
+
 app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'));
-// --- GET routes --- //
 
-// display homepage
+/* GET Routes
+   ========================================================================== */
+
+// displays homepage
 app.get('/', (req, res) => {
   res.render('home');
 });
-// display ALL campgrounds
+// displays ALL campgrounds
 app.get('/campgrounds', async (req, res) => {
   const campgrounds = await Campground.find({});
   res.render('campgrounds/index', { campgrounds });
 });
-// display create NEW campground form
+// displays create NEW campground form
 app.get('/campgrounds/new', (req, res) => {
   res.render('campgrounds/new');
 });
-// display EDIT form
+// displays EDIT form
 app.get('/campgrounds/:id/edit', async (req, res) => {
   const campground = await Campground.findById(req.params.id);
   res.render('campgrounds/edit', { campground })
 });
-// display SHOW specific campground info
+// displays SHOW specific campground info
 app.get('/campgrounds/:id', async (req, res) => {
   const campground = await Campground.findById(req.params.id);
   res.render('campgrounds/show', { campground })
 });
 
-// --- POST routes --- //
+/* POST Routes
+   ========================================================================== */
 
 // receive POST from NEW form
 app.post('/campgrounds', async (req, res) => {
@@ -63,7 +76,8 @@ app.post('/campgrounds', async (req, res) => {
   res.redirect(`/campgrounds/${campground._id}`);
 });
 
-// --- PUT routes --- //
+/* PUT Routes
+   ========================================================================== */
 
 // receive PUT from EDIT form
 app.put('/campgrounds/:id', async (req, res) => {
@@ -72,7 +86,8 @@ app.put('/campgrounds/:id', async (req, res) => {
   res.redirect(`/campgrounds/${campground._id}`);
 });
 
-// --- DELETE routes --- //
+/* DELETE Routes
+   ========================================================================== */
 
 // receive DELETE from SHOW
 app.delete('/campgrounds/:id', async (req, res) => {
@@ -81,5 +96,6 @@ app.delete('/campgrounds/:id', async (req, res) => {
   res.redirect('/campgrounds');
 });
 
-// --- listen --- //
+/* Listen On Port
+   ========================================================================== */
 app.listen(3000, () => console.log('APP IS LISTENING ON PORT 3000'));
