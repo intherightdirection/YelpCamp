@@ -14,31 +14,11 @@
   <body class="d-flex flex-column vh-100">
     <%- include('../partials/navbar') %>
     <main class="container mt-5">
+      <%- include('../partials/flash') %>
       <%- body %>
     </main>
     <!-- Form validation -->
-    <script>
-      // Example starter JavaScript for disabling form submissions if there are invalid fields
-      (function () {
-        'use strict'
-
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        const forms = document.querySelectorAll('.validated-form')
-
-        // Loop over them and prevent submission
-        Array.prototype.slice.call(forms)
-          .forEach(function (form) {
-            form.addEventListener('submit', function (event) {
-              if (!form.checkValidity()) {
-                event.preventDefault()
-                event.stopPropagation()
-              }
-
-              form.classList.add('was-validated')
-            }, false)
-          })
-      })()
-    </script>
+    <script src='/javascripts/validateForms.js'></script>
     <!-- Bootstrap v5.1 - JavaScript Seperate scripts solution -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
       integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous">
