@@ -26,7 +26,7 @@ router.get('/:id', catchAsync(async (req, res) => {
     .findById(req.params.id)
     .populate({path: 'reviews', populate: {path: 'author'}})
     .populate('author');
-  console.log(campground);
+  // console.log(campground);
   
   if (!campground) {
     req.flash('error', 'Cannot find that campground!');
@@ -50,8 +50,8 @@ router.get('/:id/edit', isLoggedIn, isAuthor, catchAsync(async (req, res) => {
 
 // receive POST from NEW form
 router.post('/', validateCampground, isLoggedIn, catchAsync(async (req, res, next) => {
-  
   const campground = new Campground(req.body.campground);
+  campground.author = req.user._id;
   await campground.save();
   req.flash('success', 'Successfully made a new campground!');
   res.redirect(`/campgrounds/${campground._id}`);
