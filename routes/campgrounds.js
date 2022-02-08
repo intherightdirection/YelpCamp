@@ -8,35 +8,24 @@ const router = express.Router();
    Campground Routes
    ========================================================================== */
 
-/* GET Routes
-   ========================================================================== */
-
-// displays ALL campgrounds
-router.get('/', catchAsync(campgrounds.index));
-// displays create NEW campground form
-router.get('/new', isLoggedIn, campgrounds.renderNewForm);
-// displays SHOW specific campground info
-router.get('/:id', catchAsync(campgrounds.showCampground));
-// displays EDIT form
-router.get('/:id/edit', isLoggedIn, isAuthor, catchAsync(campgrounds.renderEditForm));
-
-/* POST Routes
-  ========================================================================== */
-
-// receive POST from NEW form
-router.post('/', validateCampground, isLoggedIn, catchAsync(campgrounds.createCampground));
-
-
-/* PUT Routes
-  ========================================================================== */
+router.route('/')
+  // displays ALL campgrounds
+  .get(catchAsync(campgrounds.index))
+  // receive POST from NEW form
+  .post(isLoggedIn, validateCampground, catchAsync(campgrounds.createCampground))
   
-// receive PUT from EDIT form
-router.put('/:id', validateCampground, isLoggedIn, isAuthor, catchAsync(campgrounds.updateCampground));
+// displays create NEW campground form
+router.get('/new', isLoggedIn, campgrounds.renderNewForm)
 
-/* DELETE Routes
-  ========================================================================== */
-
-// receive DELETE from SHOW
-router.delete('/:id', isLoggedIn, isAuthor, catchAsync(campgrounds.deleteCampground));
+router.route('/:id')
+  // displays SHOW specific campground info
+  .get(catchAsync(campgrounds.showCampground))
+  // receive PUT from EDIT form
+  .put(validateCampground, isLoggedIn, isAuthor, catchAsync(campgrounds.updateCampground))
+  // receive DELETE from SHOW
+  .delete(isLoggedIn, isAuthor, catchAsync(campgrounds.deleteCampground))
+  
+// displays EDIT form
+router.get('/:id/edit', isLoggedIn, isAuthor, catchAsync(campgrounds.renderEditForm))
 
 module.exports = router;
