@@ -16,11 +16,8 @@ router.route('/')
   // displays ALL campgrounds
   .get(catchAsync(campgrounds.index))
   // receive POST from NEW form
-  // .post(isLoggedIn, validateCampground, catchAsync(campgrounds.createCampground))
-  .post(upload.array('image'), (req, res) => {
-    console.log(req.body, req.files);
-    res.send("IT WORKED")
-  })
+  .post(isLoggedIn, upload.array('image'), validateCampground, catchAsync(campgrounds.createCampground))
+
 // displays create NEW campground form
 router.get('/new', isLoggedIn, campgrounds.renderNewForm)
 
@@ -28,7 +25,7 @@ router.route('/:id')
   // displays SHOW specific campground info
   .get(catchAsync(campgrounds.showCampground))
   // receive PUT from EDIT form
-  .put(validateCampground, isLoggedIn, isAuthor, catchAsync(campgrounds.updateCampground))
+  .put(isLoggedIn, isAuthor, upload.array('image'), catchAsync(campgrounds.updateCampground))
   // receive DELETE from SHOW
   .delete(isLoggedIn, isAuthor, catchAsync(campgrounds.deleteCampground))
   
