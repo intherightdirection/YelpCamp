@@ -6,7 +6,6 @@ const { isLoggedIn, isAuthor, validateCampground } = require('../middleware');
 const { storage } = require('../cloudinary');
 const router = express.Router();
 const upload = multer({ storage });
-// const upload = multer({ dest: 'uploads' });
 
 /* ==========================================================================
    Campground Routes
