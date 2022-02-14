@@ -15,29 +15,44 @@ const CampgroundSchema = new Schema({
   title: String,
   images: [ImageSchema],
   geometry: {
-    type: {
-        type: String,
-        enum: ['Point'],
-        required: true
-    },
-    coordinates: {
-        type: [Number],
-        required: true
-    }
+      type: {
+          type: String,
+          enum: ['Point'],
+          required: true
+      },
+      coordinates: {
+          type: [Number],
+          required: true
+      }
   },
   price: Number,
   description: String,
   location: String,
   author: {
-    type: Schema.Types.ObjectId,
-    ref: 'User'
+      type: Schema.Types.ObjectId,
+      ref: 'User'
   },
   reviews: [
-    { 
-      type: Schema.Types.ObjectId,
-      ref: 'Review'
-    }
+      {
+          type: Schema.Types.ObjectId,
+          ref: 'Review'
+      }
   ]
+});
+
+CampgroundSchema.post('findOneAndDelete', async function(campground) {
+  if (campground.reviews) {
+    await Review.deleteMany({
+      _id : { $in: campground.reviews }
+    });
+  }
+  if (campground.images) {
+    for (const img of campground.images) {
+      if (img.filename) {
+        await cloudinary.uploader.destroy(img.filename);
+      }
+    }
+  }
 });
 
 CampgroundSchema.post('findOneAndDelete', async function(doc) {
