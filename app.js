@@ -27,7 +27,7 @@ const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
 /* ==========================================================================
    Mongoose Connection
    ========================================================================== */
-// mongodb://localhost:27017/yelp-camp
+
 mongoose.connect(dbUrl);
   
 const db = mongoose.connection;
@@ -87,7 +87,12 @@ const sessionConfig = {
 
 app.use(session(sessionConfig));
 app.use(flash());
-// app.use(helmet());
+app.use(
+   helmet({
+     crossOriginEmbedderPolicy: false,
+     // ...
+   })
+ );
 // Helmet SecPol URLs
 const scriptSrcUrls = [
    "https://stackpath.bootstrapcdn.com/",
@@ -178,4 +183,6 @@ app.use((err, req, res, next) => {
 
 /* Listen On Port
    ========================================================================== */
-app.listen(3000, () => console.log('APP IS LISTENING ON PORT 3000'));
+const port = process.env.Port || 3000;
+
+app.listen(port, () => console.log(`APP IS LISTENING ON PORT ${port}`));
