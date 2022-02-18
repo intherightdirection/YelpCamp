@@ -183,6 +183,6 @@ app.use((err, req, res, next) => {
 
 /* Listen On Port
    ========================================================================== */
-const port = process.env.Port || 3000;
+const port = process.env.PORT || 3000;
 
 app.listen(port, () => console.log(`APP IS LISTENING ON PORT ${port}`));
